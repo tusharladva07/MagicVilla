@@ -1,0 +1,52 @@
+﻿<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@if (TempData["success"] != null)
+{
+    <script type="text/javascript">
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: 'rgba(14, 80, 32, 0.65)',
+            color: '#fff',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+                        })
+
+
+
+        Toast.fire({
+            icon: 'success',
+            title: '@TempData["success"]',
+        })
+    </script>
+}
+@if (TempData["error"] != null)
+{
+    <script type="text/javascript">
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            background: 'rgba(80, 14, 32, 0.65)',
+            color: '#fff',
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+
+
+
+        Toast.fire({
+            icon: 'error',
+            title: '@TempData["error"]',
+        })
+    </script>
+}

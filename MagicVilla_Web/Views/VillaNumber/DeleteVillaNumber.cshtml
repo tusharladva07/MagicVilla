@@ -1,0 +1,46 @@
+﻿@model MagicVilla_Web.VM.VillaNumberDeleteVM
+
+<form asp-action="DeleteVillaNumber">
+    <br />
+    <div class="container border p-3">
+        <h1 class="text-primary">Delete Villa</h1>
+        <hr />
+        <input type="hidden" asp-for="VillaNumber.VillaNo" />
+
+        <div class="row">
+            <div class="col-2">
+                <label asp-for="VillaNumber.VillaNo" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-2">
+                <input asp-for="VillaNumber.VillaNo" disabled class="form-control" />
+            </div>
+
+            <div class="col-2">
+                <label asp-for="VillaNumber.VillaID" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-2">
+                <select asp-for="VillaNumber.VillaID" disabled class="form-select" asp-items="@Model.VillaList">
+                    <option disabled selected>Select Villa</option>
+                </select>
+            </div>
+
+
+            <div class="col-2">
+                <label asp-for="VillaNumber.SpecialDetails" class="control-label pt-2" style="font-size:20px;"></label>
+            </div>
+            <div class="col-10 pb-2">
+                <textarea asp-for="VillaNumber.SpecialDetails" disabled class="form-control"></textarea>
+            </div>
+            <div class="col-5 offset-2">
+                <a asp-action="IndexVillaNumber" asp-controller="VillaNumber" class="btn btn-primary form-control">Back To List</a>
+            </div>
+            <div class="col-5">
+                <input type="submit" value="Delete" class=" btn btn-danger form-control" />
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
