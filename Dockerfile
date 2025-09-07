@@ -2,13 +2,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy csproj and restore as distinct layers
-COPY *.sln .
-COPY MagicVilla/*.csproj ./MagicVilla/
-RUN dotnet restore
+# Copy solution and project files
+COPY MagicVilla.sln ./
+COPY MagicVilla/MagicVilla.csproj MagicVilla/
 
-# Copy everything else and build
+# Restore dependencies
+RUN dotnet restore MagicVilla.sln
+
+# Copy everything else
 COPY . .
+
+# Build and publish
 WORKDIR /src/MagicVilla
 RUN dotnet publish -c Release -o /app
 
@@ -17,7 +21,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
 
-# Tell ASP.NET Core to listen on port 8080
+# Expose port 8080 for Render
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
