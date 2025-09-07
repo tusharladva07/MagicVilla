@@ -1,27 +1,22 @@
-# Dockerfile (for repo root where MagicVilla.sln sits)
+# Use the official .NET SDK image to build the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy solution file and project files (adjust filenames if different)
-COPY MagicVilla.sln ./
-COPY MagicVilla_Web/*.csproj MagicVilla_Web/
-COPY MagicVilla_VillaAPI/*.csproj MagicVilla_VillaAPI/ || true
-COPY MagicVilla_Utility/*.csproj MagicVilla_Utility/ || true
-
-# Restore using the solution
-RUN dotnet restore "MagicVilla.sln"
-
-# Copy everything and publish only the web project
+# Copy everything and restore dependencies
 COPY . .
-WORKDIR /src/MagicVilla_Web
-RUN dotnet publish -c Release -o /app --no-restore
+RUN dotnet restore
 
-# Runtime image
+# Publish the app to the /app folder
+RUN dotnet publish -c Release -o /app
+
+# Use the .NET runtime image to run the app
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
 
+# Expose port 8080 for Render
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-ENTRYPOINT ["dotnet", "MagicVilla_Web.dll"]
+# Run your application
+ENTRYPOINT ["dotnet", "MagicVilla.dll"]
