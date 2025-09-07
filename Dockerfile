@@ -1,22 +1,25 @@
-# Use the official .NET SDK image to build the app
+# Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
-# Copy everything and restore dependencies
-COPY . .
+# Copy csproj and restore as distinct layers
+COPY *.sln .
+COPY MagicVilla/*.csproj ./MagicVilla/
 RUN dotnet restore
 
-# Publish the app to the /app folder
+# Copy everything else and build
+COPY . .
+WORKDIR /src/MagicVilla
 RUN dotnet publish -c Release -o /app
 
-# Use the .NET runtime image to run the app
+# Runtime stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app .
 
-# Expose port 8080 for Render
+# Tell ASP.NET Core to listen on port 8080
 ENV ASPNETCORE_URLS=http://+:8080
 EXPOSE 8080
 
-# Run your application
+# Run the app
 ENTRYPOINT ["dotnet", "MagicVilla.dll"]
