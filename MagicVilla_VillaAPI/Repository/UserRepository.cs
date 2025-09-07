@@ -89,7 +89,7 @@ namespace MagicVilla_VillaAPI.Repository
             try
             {
                 var result = await _userManager.CreateAsync(user, registrationRequestDTO.Password);
-                if (result.Succeeded && result.Errors == null)
+                if (result.Succeeded && (result.Errors == null || result.Errors.Count() <= 0))
                 {
                     if (!_roleManager.RoleExistsAsync("admin").GetAwaiter().GetResult())
                     {
